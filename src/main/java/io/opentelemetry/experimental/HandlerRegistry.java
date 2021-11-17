@@ -37,7 +37,7 @@ final class HandlerRegistry {
 //            new ContextSwitchRateHandler(otelMeter),
             new OverallCPULoadHandler(),
 //            new ContainerConfigurationHandler(otelMeter),
-                new MethodSampleHandler(new ThreadGrouper("sampledThread"), "jdk.NativeMethodSample"),
+//                new MethodSampleHandler(new ThreadGrouper("sampledThread"), "jdk.NativeMethodSample"),
             new MethodSampleHandler(new ThreadGrouper("sampledThread"), "jdk.ExecutionSample"));
 //            new LongLockHandler(otelMeter, grouper));
     filtered.forEach(RecordedEventHandler::init);

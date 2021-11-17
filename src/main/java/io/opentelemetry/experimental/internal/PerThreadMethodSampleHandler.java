@@ -8,6 +8,7 @@ package io.opentelemetry.experimental.internal;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.perftools.profiles.ProfileProto;
 import io.opentelemetry.experimental.internal.profiler.JvmStackTrace;
 import jdk.jfr.consumer.RecordedEvent;
 import jdk.jfr.consumer.RecordedFrame;
@@ -56,20 +57,23 @@ public class PerThreadMethodSampleHandler implements RecordedEventHandler {
     }
 
     // FIXME Protobuf code goes here...
-    System.out.println(convertTrace(threadName, threadState, ev.getStackTrace()));
-//    flamegraph.record(convertTrace(threadName, threadState, ev.getStackTrace()));
+    var converted = convertTrace(threadName, threadState, ev.getStackTrace());
+    System.out.println(converted);
+    ProfileProto.Profile profile = ProfileAdapter.adapt(converted);
+    System.out.println(profile);
   }
 
   private static JvmStackTrace convertTrace(
       String name, String state, RecordedStackTrace stackTrace) {
     List<JvmStackTrace.JvmStackFrame> out = new ArrayList<>();
 
-    for (RecordedFrame frame : stackTrace.getFrames()) {
+    for (var frame : stackTrace.getFrames()) {
       String desc = describeMethod(frame.getMethod());
       int line = frame.getLineNumber();
       int bytecodeIndex = frame.getBytecodeIndex();
       out.add(new JvmStackTrace.JvmStackFrame(desc, line, bytecodeIndex));
     }
+//    System.out.println("Finished converting...");
 
     return new JvmStackTrace(name, state, out);
   }

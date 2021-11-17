@@ -7,6 +7,7 @@ package io.opentelemetry.experimental;
 
 import java.lang.instrument.Instrumentation;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -36,7 +37,16 @@ public final class JfrProfilerAgent {
    *
    */
   public static void enable() {
-    var jfrMonitorService = Executors.newSingleThreadExecutor();
+    ThreadFactory tf = r -> {
+      var t = new Thread();
+      t.setName("jfrAgent");
+      t.setUncaughtExceptionHandler((t1, e) -> {
+        System.out.println(t1.getName() +" exited due to: "+ e.getMessage());
+        e.printStackTrace();
+      });
+      return t;
+    };
+    var jfrMonitorService = Executors.newSingleThreadExecutor(tf);
     var toMetricRegistry = HandlerRegistry.createDefault();
 
     jfrMonitorService.submit(
