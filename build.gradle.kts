@@ -42,8 +42,16 @@ tasks {
 
   jar {
     manifest {
-      attributes("Main-Class" to "Foo")
+      attributes(jar.get().manifest.attributes)
+      attributes(
+        "Main-Class" to "io.opentelemetry.experimental.JfrProfilerAgent",
+        "Agent-Class" to "io.opentelemetry.experimental.JfrProfilerAgent",
+        "Premain-Class" to "io.opentelemetry.experimental.JfrProfilerAgent",
+        "Can-Redefine-Classes" to true,
+        "Can-Retransform-Classes" to true
+      )
     }
+
   }
 
   test {

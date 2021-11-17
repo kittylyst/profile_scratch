@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package io.opentelemetry.experimental.profiler;
+package io.opentelemetry.experimental.internal.profiler;
 
 // This should be a record, but don't want to complicate the API build :(
 public final class FlameLevel {

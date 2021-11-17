@@ -5,6 +5,10 @@
 
 package io.opentelemetry.experimental;
 
+import io.opentelemetry.experimental.internal.MethodSampleHandler;
+import io.opentelemetry.experimental.internal.RecordedEventHandler;
+import io.opentelemetry.experimental.internal.ThreadGrouper;
+
 import java.util.*;
 import java.util.stream.Stream;
 

@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package io.opentelemetry.experimental;
+package io.opentelemetry.experimental.internal;
 
 public class MethodSampleHandler extends AbstractThreadDispatchingHandler {
   private static final String METRIC_NAME = "runtime.jvm.cpu.longlock.time";

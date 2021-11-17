@@ -5,25 +5,34 @@
 
 package io.opentelemetry.experimental;
 
+import java.lang.instrument.Instrumentation;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import io.opentelemetry.experimental.internal.RecordedEventHandler;
 import jdk.jfr.EventSettings;
 import jdk.jfr.consumer.RecordingStream;
 
 /** The entry point class for the JFR-over-OpenTelemetry support. */
-public final class JfrMetrics {
-  private JfrMetrics() {}
+public final class JfrProfilerAgent {
+  private JfrProfilerAgent() {}
 
-  private static final Logger logger = Logger.getLogger(JfrMetrics.class.getName());
+  private static final Logger logger = Logger.getLogger(JfrProfilerAgent.class.getName());
+
+  public static void agentmain(String agentArgs, Instrumentation inst) {
+    premain(agentArgs, inst);
+  }
+
+  public static void premain(String agentArgs, Instrumentation inst) {
+    enable();
+  }
 
   /**
    * Enables and starts a JFR recording stream on a background thread. The thread converts a subset
-   * of JFR events to OpenTelemetry metrics.
+   * of JFR events to pprof samples and sends them to a pprofextension HTTP endpoint.
    *
-   * @param meterProvider - the OpenTelemetry metric provider that will harvest the generated
-   *     metrics.
    */
   public static void enable() {
     var jfrMonitorService = Executors.newSingleThreadExecutor();

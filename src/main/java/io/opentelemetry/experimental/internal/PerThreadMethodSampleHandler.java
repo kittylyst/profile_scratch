@@ -3,12 +3,12 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package io.opentelemetry.experimental;
+package io.opentelemetry.experimental.internal;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import io.opentelemetry.experimental.profiler.JvmStackTrace;
+import io.opentelemetry.experimental.internal.profiler.JvmStackTrace;
 import jdk.jfr.consumer.RecordedEvent;
 import jdk.jfr.consumer.RecordedFrame;
 import jdk.jfr.consumer.RecordedMethod;
@@ -56,6 +56,7 @@ public class PerThreadMethodSampleHandler implements RecordedEventHandler {
     }
 
     // FIXME Protobuf code goes here...
+    System.out.println(convertTrace(threadName, threadState, ev.getStackTrace()));
 //    flamegraph.record(convertTrace(threadName, threadState, ev.getStackTrace()));
   }
 

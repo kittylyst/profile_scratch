@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package io.opentelemetry.experimental.profiler;
+package io.opentelemetry.experimental.internal.profiler;
 
 import java.util.Collections;
 import java.util.List;
@@ -55,5 +55,23 @@ public final class JvmStackTrace {
     public int bytecodeIndex() {
       return bytecodeIndex;
     }
+
+    @Override
+    public String toString() {
+      return "JvmStackFrame{" +
+              "desc='" + desc + '\'' +
+              ", line=" + line +
+              ", bytecodeIndex=" + bytecodeIndex +
+              '}';
+    }
+  }
+
+  @Override
+  public String toString() {
+    return "JvmStackTrace{" +
+            "threadName='" + threadName + '\'' +
+            ", threadState='" + threadState + '\'' +
+            ", frames=" + frames +
+            '}';
   }
 }

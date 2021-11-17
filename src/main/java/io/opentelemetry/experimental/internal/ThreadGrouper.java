@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package io.opentelemetry.experimental;
+package io.opentelemetry.experimental.internal;
 
 import java.util.Optional;
 import jdk.jfr.consumer.RecordedEvent;
