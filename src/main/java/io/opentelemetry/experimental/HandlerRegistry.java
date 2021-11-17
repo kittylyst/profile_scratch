@@ -6,6 +6,7 @@
 package io.opentelemetry.experimental;
 
 import io.opentelemetry.experimental.internal.MethodSampleHandler;
+import io.opentelemetry.experimental.internal.OverallCPULoadHandler;
 import io.opentelemetry.experimental.internal.RecordedEventHandler;
 import io.opentelemetry.experimental.internal.ThreadGrouper;
 
@@ -25,7 +26,6 @@ final class HandlerRegistry {
 
   static HandlerRegistry createDefault() {
 
-    var grouper = new ThreadGrouper();
     var filtered =
         List.of(
 //            new ObjectAllocationInNewTLABHandler(otelMeter, grouper),
@@ -35,9 +35,10 @@ final class HandlerRegistry {
 //            new G1GarbageCollectionHandler(otelMeter),
 //            new GCHeapSummaryHandler(otelMeter),
 //            new ContextSwitchRateHandler(otelMeter),
-//            new OverallCPULoadHandler(otelMeter),
+            new OverallCPULoadHandler(),
 //            new ContainerConfigurationHandler(otelMeter),
-            new MethodSampleHandler(grouper, "jdk.ExecutionSample"));
+                new MethodSampleHandler(new ThreadGrouper("sampledThread"), "jdk.NativeMethodSample"),
+            new MethodSampleHandler(new ThreadGrouper("sampledThread"), "jdk.ExecutionSample"));
 //            new LongLockHandler(otelMeter, grouper));
     filtered.forEach(RecordedEventHandler::init);
 

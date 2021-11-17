@@ -26,6 +26,7 @@ public final class JfrProfilerAgent {
   }
 
   public static void premain(String agentArgs, Instrumentation inst) {
+    System.out.println("Enabling agent...");
     enable();
   }
 

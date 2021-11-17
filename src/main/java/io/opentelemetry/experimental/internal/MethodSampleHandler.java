@@ -5,6 +5,9 @@
 
 package io.opentelemetry.experimental.internal;
 
+import java.time.Duration;
+import java.util.Optional;
+
 public class MethodSampleHandler extends AbstractThreadDispatchingHandler {
   private static final String METRIC_NAME = "runtime.jvm.cpu.longlock.time";
   private static final String DESCRIPTION = "";
@@ -38,6 +41,11 @@ public class MethodSampleHandler extends AbstractThreadDispatchingHandler {
   @Override
   public String getEventName() {
     return eventName;
+  }
+
+  @Override
+  public Optional<Duration> getPollingDuration() {
+    return Optional.of(Duration.ofSeconds(1));
   }
 
   @Override
