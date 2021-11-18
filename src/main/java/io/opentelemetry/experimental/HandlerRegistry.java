@@ -5,12 +5,14 @@
 
 package io.opentelemetry.experimental;
 
+import com.google.perftools.profiles.ProfileProto;
 import io.opentelemetry.experimental.internal.MethodSampleHandler;
 import io.opentelemetry.experimental.internal.OverallCPULoadHandler;
 import io.opentelemetry.experimental.internal.RecordedEventHandler;
 import io.opentelemetry.experimental.internal.ThreadGrouper;
 
 import java.util.*;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.stream.Stream;
 
 final class HandlerRegistry {
@@ -24,7 +26,7 @@ final class HandlerRegistry {
     this.mappers = new ArrayList<>(mappers);
   }
 
-  static HandlerRegistry createDefault() {
+  static HandlerRegistry createDefault(LinkedBlockingQueue<ProfileProto.Profile> sendingQueue) {
 
     var filtered =
         List.of(
@@ -38,7 +40,7 @@ final class HandlerRegistry {
             new OverallCPULoadHandler(),
 //            new ContainerConfigurationHandler(otelMeter),
 //                new MethodSampleHandler(new ThreadGrouper("sampledThread"), "jdk.NativeMethodSample"),
-            new MethodSampleHandler(new ThreadGrouper("sampledThread"), "jdk.ExecutionSample"));
+            new MethodSampleHandler(new ThreadGrouper("sampledThread"), "jdk.ExecutionSample", sendingQueue));
 //            new LongLockHandler(otelMeter, grouper));
     filtered.forEach(RecordedEventHandler::init);
 

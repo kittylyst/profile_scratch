@@ -7,6 +7,7 @@ package io.opentelemetry.experimental.internal;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import com.google.perftools.profiles.ProfileProto;
 import io.opentelemetry.experimental.internal.profiler.JvmStackTrace;
@@ -22,10 +23,12 @@ public class PerThreadMethodSampleHandler implements RecordedEventHandler {
 
   private final String threadName;
   private final String eventName;
+  private final LinkedBlockingQueue<ProfileProto.Profile> sendingQueue;
 
-  public PerThreadMethodSampleHandler(String threadName, String eventName) {
+  public PerThreadMethodSampleHandler(String threadName, String eventName, LinkedBlockingQueue<ProfileProto.Profile> sendingQueue) {
     this.threadName = threadName;
     this.eventName = eventName;
+    this.sendingQueue = sendingQueue;
   }
 
   @Override
@@ -51,16 +54,17 @@ public class PerThreadMethodSampleHandler implements RecordedEventHandler {
     //      threadName = grouper.groupedName(sampledThread);
     //    }
 
-    String threadState = null;
+    var threadState = "";
     if (ev.hasField(STATE)) {
       threadState = ev.getString(STATE);
     }
 
-    // FIXME Protobuf code goes here...
     var converted = convertTrace(threadName, threadState, ev.getStackTrace());
-    System.out.println(converted);
     ProfileProto.Profile profile = ProfileAdapter.adapt(converted);
-    System.out.println(profile);
+//    System.out.println(profile);
+    if (!sendingQueue.offer(profile)) {
+      System.err.println("Queue is full, this should not happen...");
+    }
   }
 
   private static JvmStackTrace convertTrace(
