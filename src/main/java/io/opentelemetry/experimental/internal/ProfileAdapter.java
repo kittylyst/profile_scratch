@@ -1,6 +1,7 @@
 package io.opentelemetry.experimental.internal;
 
 import com.google.perftools.profiles.ProfileProto;
+import com.google.protobuf.Descriptors;
 import io.opentelemetry.experimental.internal.profiler.JvmStackTrace;
 
 import java.util.HashMap;
@@ -26,6 +27,9 @@ public class ProfileAdapter {
 
     public static ProfileProto.Profile adapt(JvmStackTrace trace) {
         var builder = ProfileProto.Profile.newBuilder();
+//        Descriptors.FieldDescriptor fd = ProfileProto.Profile.getDescriptor().findFieldByName("");
+//        builder.setField(fd, trace.threadName());
+
         var hackMap = new HashMap<String, Integer>();
         hackMap.put("", 0);
         var index = 1;
@@ -40,6 +44,7 @@ public class ProfileAdapter {
             } else {
                 functionBuilder.setName(hackMap.get(frame.desc()));
             }
+            functionBuilder.setStartLine(frame.line());
             builder.addFunction(functionBuilder.build());
 //            var sampleBuilder = ProfileProto.Sample.newBuilder();
 //            sampleBuilder.
