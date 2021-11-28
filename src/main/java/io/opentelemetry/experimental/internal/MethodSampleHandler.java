@@ -5,18 +5,23 @@
 
 package io.opentelemetry.experimental.internal;
 
+import com.google.perftools.profiles.ProfileProto;
+
 import java.time.Duration;
 import java.util.Optional;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class MethodSampleHandler extends AbstractThreadDispatchingHandler {
   private static final String METRIC_NAME = "runtime.jvm.cpu.longlock.time";
   private static final String DESCRIPTION = "";
 
   private final String eventName;
+  private final LinkedBlockingQueue<ProfileProto.Profile> sendingQueue;
 
-  public MethodSampleHandler(ThreadGrouper grouper, String eventName) {
+  public MethodSampleHandler(ThreadGrouper grouper, String eventName, LinkedBlockingQueue<ProfileProto.Profile> sendingQueue) {
     super(grouper);
     this.eventName = eventName;
+    this.sendingQueue = sendingQueue;
   }
 
   public enum Event {
@@ -50,12 +55,7 @@ public class MethodSampleHandler extends AbstractThreadDispatchingHandler {
 
   @Override
   public RecordedEventHandler createPerThreadSummarizer(String threadName) {
-//    var attr = Attributes.of(ATTR_THREAD_NAME, threadName);
-//    var builder = otelProfile.flamegraphBuilder(METRIC_NAME);
-//    builder.setDescription(DESCRIPTION);
-//    var flamegraph = builder.build().bind(attr);
-
-    var ret = new PerThreadMethodSampleHandler(threadName, eventName);
+    var ret = new PerThreadMethodSampleHandler(threadName, eventName, sendingQueue);
     return ret.init();
   }
 }
