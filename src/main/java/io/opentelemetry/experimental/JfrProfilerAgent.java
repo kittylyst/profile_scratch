@@ -55,7 +55,7 @@ public final class JfrProfilerAgent {
             var enableMappedEvent = eventEnablerFor(recordingStream);
             toMetricRegistry.all().forEach(enableMappedEvent);
             recordingStream.setReuse(false);
-            logger.log(Level.FINE, "Starting recording stream...");
+//            logger.log(Level.FINE, "Starting recording stream...");
             recordingStream.start(); // run forever
           }
         });

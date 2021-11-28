@@ -25,7 +25,7 @@ project.setProperty("mainClassName", "com.your.MainClass")
 dependencies {
   // implementation("org.ow2.asm:asm:9.2")
   // implementation("org.ow2.asm:asm-commons:9.2")
-  implementation("org.slf4j:slf4j-api:1.7.32")
+//  implementation("org.slf4j:slf4j-api:1.7.32")
   implementation("com.google.protobuf:protobuf-java:3.18.1")
 
   testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.1")
